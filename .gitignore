@@ -25,3 +25,5 @@ history.txt
 server.api.golang/bin/*.yml
 server.api.golang/bin/zybes*
 *.log
+notifier
+functions/notifier

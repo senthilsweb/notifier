@@ -14,6 +14,7 @@ func Setup() {
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./bin")
 	viper.AddConfigPath("./config")
+	viper.AddConfigPath("./functions")
 	viper.AllowEmptyEnv(true)
 
 	if err := viper.ReadInConfig(); err != nil {
