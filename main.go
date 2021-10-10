@@ -3,13 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"runtime"
 	"strconv"
 
-	"github.com/senthilsweb/notifier/pkg/config"
 	"github.com/senthilsweb/notifier/pkg/router"
 	"github.com/senthilsweb/notifier/pkg/utils"
 
@@ -31,7 +29,7 @@ func init() {
 	log.Info("Initialized Logger")
 
 	log.Info("Initialize Configuration")
-	config.Setup()
+	//config.Setup()
 	log.Info("Initialized Configuration")
 
 	log.Info("Initialize command line args")
@@ -71,8 +69,8 @@ func initLogger() {
 	// Only log the warning severity or above.
 	log.SetLevel(log.InfoLevel)
 
-	mWriter := io.MultiWriter(os.Stdout, ljack)
-	log.SetOutput(mWriter)
+	//mWriter := io.MultiWriter(os.Stdout, ljack)
+	log.SetOutput(os.Stdout)
 	log.SetReportCaller(true)
 	log.SetFormatter(&log.JSONFormatter{})
 	log.WithFields(log.Fields{

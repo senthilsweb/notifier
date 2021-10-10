@@ -12,10 +12,7 @@ func Setup() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
-	viper.AddConfigPath("./.netlify")
-	viper.AddConfigPath("./js")
-	viper.AddConfigPath("./functions")
-	viper.AddConfigPath("./.netlify/functions")
+	viper.AddConfigPath("./config")
 
 	viper.AllowEmptyEnv(true)
 
