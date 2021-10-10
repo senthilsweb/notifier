@@ -60,7 +60,7 @@ func initLogger() {
 		MaxAge:     3,
 		LocalTime:  true,
 	}
-
+	log.Info(ljack)
 	//log := logrus.New()
 	//
 	// Output to stdout instead of the default stderr
