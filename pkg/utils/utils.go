@@ -16,6 +16,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 )
 
 // EncodeAuthToken creates authentication token
@@ -26,6 +27,14 @@ func EncodeAuthToken(uid uint) (string, error) {
 	claims["ExpiresAt"] = time.Now().Add(time.Hour * 24).Unix()
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), claims)
 	return token.SignedString([]byte(os.Getenv("SECRET")))
+}
+
+func GetValElseSetEnvFallback(input string, key string) string {
+	value := gjson.Get(input, key)
+	if len(value.String()) == 0 {
+		return os.Getenv(key)
+	}
+	return value.String()
 }
 
 // contains
@@ -69,6 +78,15 @@ func GinContextFromContext(ctx context.Context) (*gin.Context, error) {
 		return nil, err
 	}
 	return gc, nil
+}
+
+func GetStringFromGinRequestBody(c *gin.Context) string {
+	jsonData, err := c.GetRawData()
+	res := bytes.NewBuffer(jsonData).String()
+	if err != nil {
+		return ""
+	}
+	return res
 }
 
 // AppExecutionPath returns the relative path where the application is executing

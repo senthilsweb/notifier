@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"bytes"
 	"context"
-	"os"
 	"time"
+
+	"github.com/senthilsweb/notifier/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -15,25 +15,28 @@ import (
 
 func NotifyMailgun(c *gin.Context) {
 
-	jsonData, err := c.GetRawData()
-	input := bytes.NewBuffer(jsonData).String()
-	subject := gjson.Get(input, "message.subject")
-	body := gjson.Get(input, "message.body")
-	log.Info("MAILGUN_DOMAIN ============================ " + os.Getenv("MAILGUN_DOMAIN"))
-	log.Info("Subject = " + subject.String())
+	request_body := utils.GetStringFromGinRequestBody(c)
+
+	mailgun_domain := utils.GetValElseSetEnvFallback(request_body, "MAILGUN_DOMAIN")
+	mailgun_key := utils.GetValElseSetEnvFallback(request_body, "MAILGUN_KEY")
+	sender := utils.GetValElseSetEnvFallback(request_body, "EMAIL_SENDER")
+
+	subject := gjson.Get(request_body, "message.subject")
+	body := gjson.Get(request_body, "message.body")
+	mailgun_email_template := gjson.Get(request_body, "message.template")
+	mailgun_email_payload := gjson.Get(request_body, "message.payload")
+	recipient := gjson.Get(request_body, "message.recipient")
+
+	log.Info("mailgun_email_payload = " + mailgun_email_payload.String())
 	log.Info("Body = " + body.String())
 
 	// Create an instance of the Mailgun Client
-	mg := mailgun.NewMailgun(os.Getenv("MAILGUN_DOMAIN"), os.Getenv("MAILGUN_KEY"))
-
-	sender := os.Getenv("EMAIL_SENDER")
-
-	recipient := os.Getenv("EMAIL_TEST_RECEIVER")
+	mg := mailgun.NewMailgun(mailgun_domain, mailgun_key)
 
 	// The message object allows you to add attachments and Bcc recipients
-	message := mg.NewMessage(sender, subject.String(), "", recipient)
-	message.SetTemplate("welcome_email")
-	err = message.AddTemplateVariable("passwordResetLink", "some link to your site unique to your user")
+	message := mg.NewMessage(sender, subject.String(), "", recipient.String())
+	message.SetTemplate(mailgun_email_template.String())
+	err := message.AddTemplateVariable("passwordResetLink", mailgun_email_payload.String())
 	if err != nil {
 		log.Fatal(err)
 		c.JSON(500, gin.H{"success": "false", "message": err})
