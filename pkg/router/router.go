@@ -26,12 +26,12 @@ func Setup() *gin.Engine {
 	log.Println("Setting up routes")
 	r.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message":    "pong",
-			"connection": os.Getenv("PG_CONN"),
+			"message": "pong",
 		})
 	})
 
 	r.POST("/api/notify/slack", controller.NotifySlack)
+	r.POST("/api/notify/mailgun", controller.NotifyMailgun)
 	log.Println("Finished router setup")
 	return r
 }

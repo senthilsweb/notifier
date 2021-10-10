@@ -38,7 +38,7 @@ func NotifySlack(c *gin.Context) {
 
 	subject := dyn_viper.GetString("subject")
 	body := dyn_viper.GetString("body")
-	log.Infof(subject)
+	log.Info(subject)
 	// Send a message
 	err := notifier.Send(
 		context.Background(),
