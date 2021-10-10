@@ -1,0 +1,19 @@
+notification:
+  teams:
+    webhook_url: ""
+    subject_line: ""
+    req_json_query: ""
+  slack:
+    token: "xoxb-2294734803764-2294265292647-bB4qujEM9oYFzsIDCvutbzeu"
+    channel: "C028GFPG0LS"
+integration:
+  jira:
+    url: ""
+    api_version: latest
+    username: ""
+    token: ""
+    timezone: "Europe/Istanbul"
+newman:
+  tdata_path: /usr/src/app/data
+  tresults_path: ""
+  
