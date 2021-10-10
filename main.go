@@ -1,42 +1,103 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
-	"log"
+	"io"
 	"net/http"
+	"os"
+	"runtime"
+	"strconv"
+
+	"github.com/senthilsweb/notifier/pkg/config"
+	"github.com/senthilsweb/notifier/pkg/router"
+	"github.com/senthilsweb/notifier/pkg/utils"
 
 	"github.com/apex/gateway"
-	"github.com/carlmjohnson/feed2json"
+	"github.com/natefinch/lumberjack"
+	log "github.com/sirupsen/logrus"
 )
 
+var (
+	flagPort int
+	flagEnv  string
+)
+
+func init() {
+	log.Info("Application init function start")
+
+	log.Info("Initialize Logger")
+	initLogger()
+	log.Info("Initialized Logger")
+
+	log.Info("Initialize Configuration")
+	config.Setup()
+	log.Info("Initialized Configuration")
+
+	log.Info("Initialize command line args")
+	flag.IntVar(&flagPort, "p", -1, "port number for the api server")
+	flag.StringVar(&flagEnv, "e", "dev", "Development or Production")
+	log.Info("Initialized command line args")
+
+	log.Info("Application init function end.")
+}
+
 func main() {
-	port := flag.Int("port", -1, "specify a port to use http rather than AWS Lambda")
+
 	flag.Parse()
+
+	startServer()
+
+}
+
+func initLogger() {
+
+	logfilepath := utils.AppExecutionPath() + "/" + os.Args[0] + ".log"
+	log.Info("logfilepath = " + logfilepath)
+	// Set the Lumberjack logger
+	ljack := &lumberjack.Logger{
+		Filename:   logfilepath,
+		MaxSize:    1,
+		MaxBackups: 3,
+		MaxAge:     3,
+		LocalTime:  true,
+	}
+
+	//log := logrus.New()
+	//
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+
+	// Only log the warning severity or above.
+	log.SetLevel(log.InfoLevel)
+
+	mWriter := io.MultiWriter(os.Stdout, ljack)
+	log.SetOutput(mWriter)
+	log.SetReportCaller(true)
+	log.SetFormatter(&log.JSONFormatter{})
+	log.WithFields(log.Fields{
+		"app":             os.Args[0],
+		"Runtime Version": runtime.Version(),
+		"Number of CPUs":  runtime.NumCPU(),
+		"Arch":            runtime.GOARCH,
+	}).Info("Application Initializing")
+}
+
+func startServer() {
+	r := router.Setup()
+	//log.Fatal(r)
+	//log.Fatal(http.ListenAndServe(":"+port, a.Negroni))
 	listener := gateway.ListenAndServe
 	portStr := "n/a"
-	if *port != -1 {
-		portStr = fmt.Sprintf(":%d", *port)
+	if flagPort != -1 {
+		portStr = fmt.Sprintf(":%d", flagPort)
 		listener = http.ListenAndServe
 		http.Handle("/", http.FileServer(http.Dir("./public")))
 	}
-
-	http.Handle("/api/feed", feed2json.Handler(
-		feed2json.StaticURLInjector("https://news.ycombinator.com/rss"), nil, nil, nil))
-
-	http.HandleFunc("/api/ping", Pong)
-
-	log.Fatal(listener(portStr, nil))
-}
-
-func Pong(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	js, err := json.Marshal("Pong")
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.Write(js)
+	log.Info("Starting the server " + strconv.Itoa(flagPort))
+	done := make(chan bool)
+	//go listener(flagPort, r)
+	go listener(portStr, r)
+	log.Info("Server started at port " + strconv.Itoa(flagPort))
+	<-done
 }
