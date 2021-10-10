@@ -26,7 +26,8 @@ func Setup() *gin.Engine {
 	log.Println("Setting up routes")
 	r.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message":    "pong",
+			"connection": os.Getenv("PG_CONN"),
 		})
 	})
 
