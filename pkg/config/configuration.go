@@ -13,7 +13,10 @@ func Setup() {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./.netlify")
+	viper.AddConfigPath("./js")
+	viper.AddConfigPath("./functions")
 	viper.AddConfigPath("./.netlify/functions")
+
 	viper.AllowEmptyEnv(true)
 
 	if err := viper.ReadInConfig(); err != nil {
