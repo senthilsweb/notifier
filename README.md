@@ -7,7 +7,10 @@ A multipurpose notification library to send mail, text, slack, push, telegram et
 * Should have Go installed in your local development environment
 * Optional [netlify](https://app.netlify.com/) account to deploy the golang api's as serverless functions
 * Optional [netlify](https://app.netlify.com/) CLI
-* [mailgun](https://app.mailgun.com/) account to consume the api `/notify/mailgun`
+* Optional if you want to send HTML formatted email using mailgun template. I used [Maizzle](https://maizzle.com/) to build HTML emails with
+[Tailwind CSS](https://tailwindcss.com/)
+https://maizzle.com/
+* [mailgun](https://app.mailgun.com/) account as the `notify` (sendmail) api is built using `mailgun`
 * VSCode Editor or [Gitpod](https://gitpod.io/) online VSCode editor 50 hours per month free plan
 
 ## Local Development
