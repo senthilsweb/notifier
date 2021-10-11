@@ -66,9 +66,9 @@ Refer the following documentaion and blog post to host the server (and optional 
 
 ## Key Frameworks and Libraries used
 
-    - [x] github.com/apex/gateway
-	- [x] github.com/gin-gonic/gin
-	- [x] github.com/mailgun/mailgun-go/v4
-	- [x] github.com/sirupsen/logrus
-	- [x] github.com/spf13/viper
-	- [x] github.com/tidwall/gjson
+- [x] github.com/apex/gateway
+- [x] github.com/gin-gonic/gin
+- [x] github.com/mailgun/mailgun-go/v4
+- [x] github.com/sirupsen/logrus
+- [x] github.com/spf13/viper
+- [x] github.com/tidwall/gjson
