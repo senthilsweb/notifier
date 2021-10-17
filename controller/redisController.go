@@ -88,6 +88,6 @@ func GetEnvironment(c *gin.Context) {
 	key := c.Param("key")
 	val := os.Getenv(key)
 
-	c.JSON(200, gin.H{"success": "true", "message": "Webhook payload successfully Enqueued", "key": key, "value": val})
+	c.JSON(200, gin.H{"success": "true", "message": "Environment variable get attempt was successful", "key": key, "value": val})
 	return
 }
