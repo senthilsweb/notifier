@@ -32,6 +32,9 @@ func Setup() *gin.Engine {
 
 	r.POST("/api/notify/slack", controller.NotifySlack)
 	r.POST("/api/notify/mailgun", controller.NotifyMailgun)
+	r.POST("/api/pdf/export", controller.Export2PDF)
+	r.POST("/api/png/export", controller.Export2PNG)
+	r.POST("/api/redis/enque", controller.Enqueue)
 	log.Println("Finished router setup")
 	return r
 }
