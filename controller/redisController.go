@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -67,6 +68,7 @@ func Swissknife(c *gin.Context) {
 	number := gjson.Get(request_body, "number").String()
 	form_name := gjson.Get(request_body, "form_name").String()
 	redis_uri := utils.GetValElseSetEnvFallback(request_body, "REDIS_URI")
+
 	kv_key := ""
 	if len(number) > 0 && len(form_name) > 0 {
 		kv_key = form_name + ":" + number
@@ -79,5 +81,13 @@ func Swissknife(c *gin.Context) {
 	client := redis.NewClient(opt)
 	client.Set(ctx, kv_key, request_body, 0)
 	c.JSON(200, gin.H{"success": "true", "message": "Webhook payload successfully Enqueued", "key": kv_key})
+	return
+}
+
+func GetEnvironment(c *gin.Context) {
+	key := c.Param("key")
+	val := os.Getenv(key)
+
+	c.JSON(200, gin.H{"success": "true", "message": "Webhook payload successfully Enqueued", "key": key, "value": val})
 	return
 }
