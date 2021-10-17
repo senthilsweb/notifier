@@ -64,7 +64,20 @@ func Dequeue(c *gin.Context) {
 
 func Swissknife(c *gin.Context) {
 	request_body := utils.GetStringFromGinRequestBody(c)
-	log.Info(request_body)
-	c.JSON(200, gin.H{"success": "true", "message": "Webhook execution was successful"})
+	number := gjson.Get(request_body, "number").String()
+	form_name := gjson.Get(request_body, "form_name").String()
+	redis_uri := utils.GetValElseSetEnvFallback(request_body, "REDIS_URI")
+	kv_key := ""
+	if len(number) > 0 && len(form_name) > 0 {
+		kv_key = form_name + ":" + number
+	}
+	// Publish a generated user to the new_users channel
+	ctx := context.Background()
+	log.Info("kv_key=" + kv_key)
+	log.Info("kv_value=" + request_body)
+	opt, _ := redis.ParseURL(redis_uri)
+	client := redis.NewClient(opt)
+	client.Set(ctx, kv_key, request_body, 0)
+	c.JSON(200, gin.H{"success": "true", "message": "Webhook payload successfully Enqueued", "key": kv_key})
 	return
 }
