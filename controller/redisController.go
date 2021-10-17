@@ -76,11 +76,11 @@ func Swissknife(c *gin.Context) {
 	// Publish a generated user to the new_users channel
 	ctx := context.Background()
 	log.Info("kv_key=" + kv_key)
-	log.Info("kv_value=" + request_body)
+
 	opt, _ := redis.ParseURL(redis_uri)
 	client := redis.NewClient(opt)
-	client.Set(ctx, kv_key, request_body, 0)
-	c.JSON(200, gin.H{"success": "true", "message": "Webhook payload successfully Enqueued", "key": kv_key})
+	client.Set(ctx, form_name+":"+number, request_body, 0)
+	c.JSON(200, gin.H{"success": "true", "message": "Webhook payload was successfully Enqueued", "key": form_name + ":" + number})
 	return
 }
 
