@@ -80,6 +80,7 @@ func Swissknife(c *gin.Context) {
 	opt, _ := redis.ParseURL(redis_uri)
 	client := redis.NewClient(opt)
 	client.Set(ctx, form_name+":"+number, request_body, 0)
+	client.Set(ctx, "last_message", request_body, 0)
 	c.JSON(200, gin.H{"success": "true", "message": "Webhook payload was successfully Enqueued", "key": form_name + ":" + number})
 	return
 }
