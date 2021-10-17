@@ -13,8 +13,11 @@ func Export2PDF(c *gin.Context) {
 	webpage := gjson.Get(request_body, "message.webpage")
 	filename := gjson.Get(request_body, "message.filename")
 	page := rod.New().MustConnect().MustPage(webpage.String())
-	page.MustWaitLoad().MustPDF(filename.String() + ".pdf")
-	c.JSON(200, gin.H{"success": "true", "message": "PDF Export was successful"})
+	response := page.MustWaitLoad().MustPDF()
+
+	c.Writer.Header().Add("Content-type", "application/octet-stream")
+	c.Header("Content-Disposition", "attachment; filename="+filename.String()+".pdf")
+	c.Writer.Write(response)
 	return
 }
 
@@ -22,8 +25,16 @@ func Export2PNG(c *gin.Context) {
 	request_body := utils.GetStringFromGinRequestBody(c)
 	webpage := gjson.Get(request_body, "message.webpage")
 	filename := gjson.Get(request_body, "message.filename")
+	fullpage := gjson.Get(request_body, "message.fullpage")
 	page := rod.New().MustConnect().MustPage(webpage.String())
-	page.MustWaitLoad().MustScreenshot(filename.String() + ".png")
-	c.JSON(200, gin.H{"success": "true", "message": "PNG Export was successful"})
+	var response []byte
+	if fullpage.Bool() {
+		response = page.MustWaitLoad().MustScreenshotFullPage()
+	} else {
+		response = page.MustWaitLoad().MustScreenshot()
+	}
+	c.Writer.Header().Add("Content-type", "application/octet-stream")
+	c.Header("Content-Disposition", "attachment; filename="+filename.String()+".png")
+	c.Writer.Write(response)
 	return
 }
