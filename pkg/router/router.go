@@ -34,7 +34,10 @@ func Setup() *gin.Engine {
 	r.POST("/api/notify/mailgun", controller.NotifyMailgun)
 	r.POST("/api/pdf/export", controller.Export2PDF)
 	r.POST("/api/png/export", controller.Export2PNG)
-	r.POST("/api/redis/enque", controller.Enqueue)
+	r.POST("/api/redis/enqueue", controller.Enqueue)
+	r.GET("/api/redis/dequeue/:key", controller.Dequeue)
+	r.POST("/api/redis/hook/swissknife", controller.Swissknife)
+
 	log.Println("Finished router setup")
 	return r
 }
