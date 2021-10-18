@@ -116,14 +116,20 @@ func Publish(c *gin.Context) {
 }
 
 func SubscribeAndReceiveMessage() {
-	redis_uri := os.Getenv("REDIS_URI")
+	log.Info("Inside SubscribeAndReceiveMessage")
+	redis_uri := "rediss://:b3cd263ba8f14f32b7dee9907577d089@us1-deciding-kodiak-34245.upstash.io:34245"
 	opt, _ := redis.ParseURL(redis_uri)
 	client := redis.NewClient(opt)
 	ctx := context.Background()
 	topic := client.Subscribe(ctx, "order")
-	channel := topic.Channel()
+	defer topic.Close()
 
-	for msg := range channel {
+	for {
+		msg, err := topic.ReceiveMessage(ctx)
+		if err != nil {
+			panic(err)
+			log.Error(err)
+		}
 		log.Info("Message Received" + msg.Payload)
 		client.Set(ctx, "last_received_message", msg.Payload, 0)
 	}
