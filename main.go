@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"strconv"
 
+	task "github.com/senthilsweb/notifier/controller"
 	"github.com/senthilsweb/notifier/pkg/router"
 	"github.com/senthilsweb/notifier/pkg/utils"
 
@@ -43,6 +44,10 @@ func init() {
 func main() {
 
 	flag.Parse()
+
+	go func() {
+		go task.SubscribeAndReceiveMessage()
+	}()
 
 	startServer()
 

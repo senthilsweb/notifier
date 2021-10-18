@@ -114,3 +114,17 @@ func Publish(c *gin.Context) {
 	c.JSON(200, gin.H{"success": "true", "message": "Message has been published successfully"})
 	return
 }
+
+func SubscribeAndReceiveMessage() {
+	redis_uri := os.Getenv("REDIS_URI")
+	opt, _ := redis.ParseURL(redis_uri)
+	client := redis.NewClient(opt)
+	ctx := context.Background()
+	topic := client.Subscribe(ctx, "order")
+	channel := topic.Channel()
+
+	for msg := range channel {
+		log.Info("Message Received" + msg.Payload)
+		client.Set(ctx, "last_received_message", msg.Payload, 0)
+	}
+}
