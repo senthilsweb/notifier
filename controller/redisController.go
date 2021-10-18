@@ -91,3 +91,26 @@ func GetEnvironment(c *gin.Context) {
 	c.JSON(200, gin.H{"success": "true", "message": "Environment variable get attempt was successful", "key": key, "value": val})
 	return
 }
+
+func Publish(c *gin.Context) {
+	request_body := utils.GetStringFromGinRequestBody(c)
+	channel := gjson.Get(request_body, "message.channel").String()
+	payload := gjson.Get(request_body, "message.payload").String()
+
+	redis_uri := utils.GetValElseSetEnvFallback(request_body, "REDIS_URI")
+
+	opt, _ := redis.ParseURL(redis_uri)
+	client := redis.NewClient(opt)
+	// Publish a generated user to the new_users channel
+	ctx := context.Background()
+	client.Set(ctx, "last_publish_message", request_body, 0)
+
+	err := client.Publish(ctx, channel, payload).Err()
+	if err != nil {
+		c.JSON(500, gin.H{"success": "false", "message": "Message publish failed.", "exception": err})
+		return
+	}
+
+	c.JSON(200, gin.H{"success": "true", "message": "Message has been published successfully"})
+	return
+}
