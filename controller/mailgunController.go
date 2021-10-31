@@ -16,8 +16,11 @@ import (
 
 func NotifyMailgun(c *gin.Context) {
 
-	pod_node_name := "NIL"
-	pod_node_name = os.Getenv("NODE_NAME")
+	pod_node_name := os.Getenv("NODE_NAME")
+
+	if len(pod_node_name) == 0 {
+		pod_node_name = "NIL"
+	}
 	log.Info("NODE_NAME = [" + pod_node_name + "]")
 
 	request_body := utils.GetStringFromGinRequestBody(c)
