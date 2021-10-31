@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  api.notifier:
+    image: senthilsweb/notifier
+    container_name: api.notifier
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4000:3000"
+    environment:
+      - API_SECRET=''

@@ -33,8 +33,7 @@ FROM scratch
 # Copy binary from /build to the root folder of the scratch container.
 COPY --from=backend ["/build/notifier", "/notifier"]
 
-
 EXPOSE 3000
 
 # Command to run when starting the container.
-ENTRYPOINT ["/notifier", "-p \"3000\""]
+CMD ["/notifier", "-p", "3000"]
