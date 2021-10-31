@@ -8,7 +8,6 @@ import (
 	"runtime"
 	"strconv"
 
-	task "github.com/senthilsweb/notifier/controller"
 	"github.com/senthilsweb/notifier/pkg/router"
 	"github.com/senthilsweb/notifier/pkg/utils"
 
@@ -36,6 +35,9 @@ func init() {
 	log.Info("Initialize command line args")
 	flag.IntVar(&flagPort, "p", -1, "port number for the api server")
 	flag.StringVar(&flagEnv, "e", "dev", "Development or Production")
+
+	log.Info("Port = [" + fmt.Sprintf(":%d", flagPort) + "]")
+
 	log.Info("Initialized command line args")
 
 	log.Info("Application init function end.")
@@ -45,9 +47,9 @@ func main() {
 
 	flag.Parse()
 
-	go func() {
-		go task.SubscribeAndReceiveMessage()
-	}()
+	//go func() {
+	//	go task.SubscribeAndReceiveMessage()
+	//}()
 
 	startServer()
 
