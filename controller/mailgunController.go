@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/senthilsweb/notifier/pkg/utils"
@@ -14,6 +15,10 @@ import (
 )
 
 func NotifyMailgun(c *gin.Context) {
+
+	pod_node_name := "NIL"
+	pod_node_name = os.Getenv("NODE_NAME")
+	log.Info("NODE_NAME = [" + pod_node_name + "]")
 
 	request_body := utils.GetStringFromGinRequestBody(c)
 
@@ -55,7 +60,7 @@ func NotifyMailgun(c *gin.Context) {
 		return
 	}
 	log.Info(id)
-	c.JSON(200, gin.H{"success": "true", "message": "Email has been sent successfully", "m": resp})
+	c.JSON(200, gin.H{"success": "true", "message": "Email has been sent successfully", "m": resp, "node": pod_node_name})
 	return
 
 }
