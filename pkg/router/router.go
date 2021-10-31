@@ -25,8 +25,15 @@ func Setup() *gin.Engine {
 	r.Use(middleware.GinContextToContextMiddleware())
 	log.Println("Setting up routes")
 	r.GET("/api/ping", func(c *gin.Context) {
+		pod_node_name := os.Getenv("NODE_NAME")
+
+		if len(pod_node_name) == 0 {
+			pod_node_name = "NIL"
+		}
+
 		c.JSON(200, gin.H{
 			"message": "pong",
+			"node":    pod_node_name,
 		})
 	})
 
