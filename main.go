@@ -37,6 +37,7 @@ func init() {
 	flag.StringVar(&flagEnv, "e", "dev", "Development or Production")
 
 	log.Info("Port = [" + fmt.Sprintf(":%d", flagPort) + "]")
+	log.Info("Environment = [" + flagEnv + "]")
 
 	log.Info("Initialized command line args")
 
