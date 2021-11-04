@@ -10,7 +10,7 @@ on:
 env:
   project: 'notifier'
   NAME   : 'senthilsweb/notifier'
-  hash   : $(git rev-parse --short "$GITHUB_SHA")
+  hash   : '$(git rev-parse --short "$GITHUB_SHA")'
 
 jobs:
   docker:
