@@ -19,14 +19,17 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v2
 
-      - name: Get Hash
-        id: hash
+      - name: Declare some variables
+        id: vars
         shell: bash
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      - name: Check Hash
-        shell: bash
-        run: echo "${{ env.hash }}"
+      - name: Another step
+        run: |
+          echo "Branch: ${{ steps.vars.outputs.branch }}"
+          echo "Sha: ${{ steps.vars.outputs.sha_short }}"
 
       - name: Login to DockerHub
         uses: docker/login-action@v1 
@@ -39,4 +42,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{env.NAME}}:${{env.hash}}
+          tags: ${{env.NAME}}:${{ steps.vars.outputs.sha_short }}
