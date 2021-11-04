@@ -10,6 +10,7 @@ on:
 env:
   project: 'notifier'
   NAME   : 'senthilsweb/notifier'
+  hash   : $(git rev-parse --short "$GITHUB_SHA")
 
 jobs:
   docker:
@@ -18,13 +19,6 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
-
-      - name: Get Hash
-        id: hash
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
-      - name: Check Hash
-        run: echo "${{ env.hash }}"
 
       - name: Login to DockerHub
         uses: docker/login-action@v1 
