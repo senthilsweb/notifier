@@ -27,7 +27,7 @@ RUN go build -ldflags="-s -w" -o notifier .
 # Creating and running a new scratch container with the backend binary.
 #
 
-FROM scratch
+FROM golang:1.16-alpine
 
 
 # Copy binary from /build to the root folder of the scratch container.
