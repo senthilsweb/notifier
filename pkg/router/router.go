@@ -41,6 +41,7 @@ func Setup() *gin.Engine {
 	r.POST("/api/notify/mailgun", controller.NotifyMailgun)
 	r.POST("/api/pdf/export", controller.Export2PDF)
 	r.POST("/api/png/export", controller.Export2PNG)
+	r.POST("/api/word/export", controller.Export2Word)
 	r.POST("/api/redis/enqueue", controller.Enqueue)
 	r.POST("/api/redis/publish", controller.Publish)
 	r.GET("/api/redis/dequeue/:key", controller.Dequeue)

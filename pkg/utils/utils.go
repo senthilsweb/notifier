@@ -9,6 +9,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -35,6 +36,14 @@ func GetValElseSetEnvFallback(input string, key string) string {
 		return os.Getenv(key)
 	}
 	return value.String()
+}
+
+func GetFileNameWithoutExt(fileName string) string {
+	return fileName[:len(fileName)-len(filepath.Ext(fileName))]
+}
+
+func GetFileExt(fileName string) string {
+	return filepath.Ext(fileName)
 }
 
 // contains
