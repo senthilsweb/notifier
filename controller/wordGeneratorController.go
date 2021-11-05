@@ -44,13 +44,13 @@ func Export2Word(c *gin.Context) {
 		return
 	}
 
-	err = d.Generate(payload.Value(), "./.temp/"+file_full_name)
+	err = d.Generate(payload.Value(), "./temp/"+file_full_name)
 	if err != nil {
 		c.JSON(500, gin.H{"success": "false", "message": err})
 		return
 	}
 
-	dat, err := ioutil.ReadFile("./.temp/" + file_full_name)
+	dat, err := ioutil.ReadFile("./temp/" + file_full_name)
 
 	if err != nil {
 		c.JSON(500, gin.H{"success": "false", "message": err})
