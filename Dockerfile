@@ -31,11 +31,10 @@ FROM scratch
 
 
 # Copy binary from /build to the root folder of the scratch container.
-RUN mkdir /temp
-RUN mkdir /templates
+
 COPY --from=backend ["/build/notifier", "/notifier"]
-COPY --from=backend ["/build/temp/*", "/temp/"]
-COPY --from=backend ["/build/templates/*", "/templates/"]
+COPY --from=backend ["/build/temp", "/"]
+COPY --from=backend ["/build/templates", "/"]
 
 EXPOSE 3000
 
