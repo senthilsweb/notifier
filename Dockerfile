@@ -39,7 +39,7 @@ RUN chmod 755 /app
 
 COPY --from=backend ["/build/notifier", "/app/notifier"]
 COPY --from=backend ["/build/temp/*", "/app/temp/"]
-COPY --from=backend ["/build/templates/*", "/app/templates"]
+COPY --from=backend ["/build/templates/*", "/app/templates/"]
 
 EXPOSE 3000
 
